@@ -11,7 +11,7 @@ provider "aws" {
   region = "us-east-1"
   profile = "harsha"
 }
-/*
+
 resource "aws_iam_user" "user1" {
   name = "naruto"
 }
@@ -87,8 +87,9 @@ sudo systemctl enable nginx
 echo "hello" >> /var/www/html/index.html
 EOF
 }
-*/
 
+
+#vpc
 resource "aws_vpc" "vpc" {
   cidr_block = "10.0.0.0/22"
   tags = {
