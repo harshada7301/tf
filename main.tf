@@ -6,7 +6,7 @@ terraform {
     }
   }
 }
-/*
+
 provider "aws" {
   region = "us-east-1"
   profile = "harsha"
@@ -87,7 +87,7 @@ sudo systemctl enable nginx
 echo "hello" >> /var/www/html/index.html
 EOF
 }
-*/
+
 
 #vpc
 resource "aws_vpc" "vpc" {
