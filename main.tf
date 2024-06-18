@@ -6,7 +6,7 @@ terraform {
     }
   }
 }
-
+/*
 provider "aws" {
   region = "us-east-1"
   profile = "harsha"
@@ -87,7 +87,7 @@ sudo systemctl enable nginx
 echo "hello" >> /var/www/html/index.html
 EOF
 }
-
+*/
 
 #vpc
 resource "aws_vpc" "vpc" {
@@ -124,3 +124,58 @@ resource "aws_route_table_association" "rt_sub" {
   route_table_id = aws_route_table.route.id
   subnet_id = aws_subnet.public.id
 }
+#security group
+resource "aws_security_group" "tf-sg" {
+  name = "terraform-sg"
+  description = "allow ssh"
+  vpc_id = aws_vpc.vpc.id
+
+  ingress {
+    from_port = 22
+    to_port = 22
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  tags = {
+    Name = "terraform-sg"
+  }
+}
+#instance
+resource "aws_instance" "vm" {
+  ami               = "ami-08a0d1e16fc3f61ea"
+  instance_type     = "t2.micro"
+  key_name          = "terraform"
+  availability_zone = "us-east-1"
+  vpc_security_group_ids = [aws_security_group.tf-sg.id]
+
+  tags = {
+    Name = "vm-terraform"
+  }
+}
+output "instance_id" {
+  description = "print instance id"
+  value       = aws_instance.pub-vm.id
+}
+
+output "instance_public_ip" {
+  description = "print public ip"
+  value       = aws_instance.pub-vm.public_ip
+}
+
+
+
+
+
+
+
+
+
+
+
