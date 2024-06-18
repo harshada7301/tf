@@ -68,7 +68,7 @@ resource "aws_s3_bucket_acl" "bucket3" {
   bucket = aws_s3_bucket.bucket.id
   acl    = "public-read"
 }
-*/
+
 #userdata
 resource "aws_instance" "vm-01" {
   ami = "ami-08a0d1e16fc3f61ea"
@@ -87,6 +87,39 @@ sudo systemctl enable nginx
 echo "hello" >> /var/www/html/index.html
 EOF
 }
+*/
 
+resource "aws_vpc" "vpc" {
+  cidr_block = "10.0.0.0/22"
+  tags = {
+    Name = "vpc-terraform"
+  }
+}
 
+resource "aws_subnet" "public" {
+  vpc_id = aws_vpc.vpc.id
+  cidr_block = "10.0.0.0/26"
+  availability_zone = "us-east-1a"
+  tags = {
+    Name = "public-subnet"
+  }
+}
 
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.vpc.id
+}
+resource "aws_route_table" "route" {
+  vpc_id = aws_vpc.vpc.id
+  tags = {
+    Name = "rt"
+  }
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.igw.id
+  
+}
+}
+resource "aws_route_table_association" "rt_sub" {
+  route_table_id = aws_route_table.route.id
+  subnet_id = aws_subnet.public.id
+}
