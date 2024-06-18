@@ -11,7 +11,7 @@ provider "aws" {
   region = "us-east-1"
   profile = "harsha"
 }
-
+/*
 resource "aws_iam_user" "user1" {
   name = "naruto"
 }
@@ -68,5 +68,25 @@ resource "aws_s3_bucket_acl" "bucket3" {
   bucket = aws_s3_bucket.bucket.id
   acl    = "public-read"
 }
+*/
+
+resource "aws_instance" "vm-01" {
+  ami = "ami-08a0d1e16fc3f61ea"
+  instance_type = "t2.micro"
+  key_name = "terraform"
+
+  tags = {
+    Name = "vm-01"
+  
+}
+user_data = <<-EOF
+#!/bin/bash
+sudo yum install nginx -y
+sudo systemctl start nginx
+sudo systemctl enable nginx
+echo "hello" >> /var/www/html/index.html
+EOF
+}
+
 
 
