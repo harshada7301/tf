@@ -69,7 +69,7 @@ resource "aws_s3_bucket_acl" "bucket3" {
   acl    = "public-read"
 }
 */
-
+#userdata
 resource "aws_instance" "vm-01" {
   ami = "ami-08a0d1e16fc3f61ea"
   instance_type = "t2.micro"
